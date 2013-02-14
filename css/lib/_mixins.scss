@@ -1,0 +1,204 @@
+// Set width and height both at once
+@mixin size($dimensions) {
+  width: $dimensions;
+  height: $dimensions;
+}
+
+// Remove margin and padding
+@mixin no_margin_padding {
+  padding: 0;
+  margin: 0;
+}
+
+// Make a ul horizontal
+@mixin horizontal_list {
+  list-style: none;
+  overflow: hidden;
+  @include clearfix;
+  li {
+    display: block;
+    float: left;
+  }
+}
+
+// absolutely position an element in the center
+@mixin absolute_position_centering($width) {
+  position: absolute;
+  left: 50%;
+  margin-left: -$width / 2;
+}
+
+// Make a pseudo element absolutely positioned
+@mixin pseudo_element_absolute {
+  content: "";
+  display: block;
+  position: absolute;
+}
+
+//////////////////////////////////////
+/// REMOVING DEFAULT STYLES //////////
+//////////////////////////////////////
+
+@mixin remove_link_styles {
+  a {
+    color: inherit;
+    border: none;
+    text-decoration: none;
+    &:hover, &:visited {
+      color: inherit;
+    }
+  }
+}
+
+// Remove default submit button styles
+@mixin remove_submit_button_styles {
+  padding: 0;
+  background: none;
+  border: none;
+  -webkit-border-radius: none;
+     -moz-border-radius: none;
+          border-radius: none;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+// TODO: Remove <select> default styles
+
+//////////////////////////////////////
+/// CSS3 VENDOR PREFIXES /////////////
+//////////////////////////////////////
+
+// Border-radius with vendor prefixes
+@mixin border_radius($r) {
+  -webkit-border-radius: $r;
+          border-radius: $r;
+  // prevent leaking of background color
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding-box;
+          background-clip: padding-box;
+}
+
+// Box-sizing with vendor prefixes
+@mixin border_box {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+// Box-sizing with vendor prefixes
+@mixin content_box {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+
+// Box-shadow with vendor prefixes
+@mixin box_shadow($arg) {
+  -webkit-box-shadow: $arg;
+          box-shadow: $arg;
+}
+
+// Opacity with filter prop for IE6-8
+@mixin opacity($a) {
+  opacity: $a;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=" $a * 100 ")";
+  filter: alpha(opacity= $a * 100 );
+  zoom: 1;
+}
+
+// Simple linear gradient
+@mixin linear_gradient($from, $to, $start: 'top'){
+  background: mix($from, $to);
+  @if $start == 'top' {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to));
+    background: -webkit-linear-gradient(top, $from, $to);
+    background:    -moz-linear-gradient(top, $from, $to);
+    background:      -o-linear-gradient(top, $from, $to);
+    background:         linear-gradient(top, $from, $to);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr= '#{$to}');
+  } @else if $start == 'bottom' {
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,$from), color-stop(100%,$to));
+    background: -webkit-linear-gradient(bottom, $from, $to);
+    background:    -moz-linear-gradient(bottom, $from, $to);
+    background:      -o-linear-gradient(bottom, $from, $to);
+    background:         linear-gradient(bottom, $from, $to);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$to}', endColorstr= '#{$from}');
+  }
+}
+
+// Simple radial gradient
+@mixin radial_gradient($from, $to){
+  background: mix($from, $to);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,$from), color-stop(100%, $to));
+  background: -webkit-radial-gradient($from, $to);
+  background:    -moz-radial-gradient($from, $to);
+  background:      -o-radial-gradient($from, $to);
+  background:         radial-gradient($from, $to);
+}
+
+//////////////////////////////////////
+/// ADD-ONS //////////////////////////
+//////////////////////////////////////
+
+@mixin clearfix {
+  zoom: 1;
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+@mixin image_replacement {
+  display: block;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+}
+
+@mixin image_replacement_2 {
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+}
+
+@mixin triangle($dir: 'up', $size: 10px, $color: black, $ratio: 1) {
+  width: 0;
+  height: 0;
+  @if $dir == 'up' {
+    border-bottom: $size solid $color;
+    border-left: ($size/2*$ratio) solid transparent;
+    border-right: ($size/2*$ratio) solid transparent;
+  } @else if $dir == 'down' {
+    border-top: $size solid $color;
+    border-left: ($size/2*$ratio) solid transparent;
+    border-right: ($size/2*$ratio) solid transparent;
+  } @else if $dir == 'left' {
+    border-top: ($size/2*$ratio) solid transparent;
+    border-right: $size solid $color;
+    border-bottom: ($size/2*$ratio) solid transparent;
+  } @else if $dir == 'right' {
+    border-top: ($size/2*$ratio) solid transparent;
+    border-left: $size solid $color;
+    border-bottom: ($size/2*$ratio) solid transparent;
+  }
+}
+
+// TODO: Make triangles in top left etc.
+
+
+//////////////////////////////////////
+/// FUNCTIONS ////////////////////////
+//////////////////////////////////////
+
+// Calculate the width of something using the responsive formular
+@function calc-percent($target, $container) {
+  @return ($target / $container) * 100%;
+}

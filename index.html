@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+  <title>Index</title>
+
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/2.0.1/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <script src="js/lib/vendor/modernizr.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.transit/0.9.9/jquery.transit.min.js"></script>
+  <script src="js/lib/monkeypatches.js"></script>
+  <script src="js/lib/vendor/mousetrap.js"></script>
+  <script src="js/script.js"></script>
+
+</head>
+<body>
+
+<div class="points_container">
+  Points: <span class="points"></span>
+</div> <!--.points-->
+
+<div class="grid">
+  <table>
+  </table>
+</div> <!--.grid-->
+
+<div class="stuff">
+  <label for="change_speed">Change difficulty: </label>
+  <select id="change_speed">
+    <option value="500">Easy</option>
+    <option value="300" selected>Medium</option>
+    <option value="100">Hard</option>
+    <option value="50">Super hard</option>
+  </select>
+</div> <!--.speed_change-->
+
+</body>
+</html>
