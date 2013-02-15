@@ -15,8 +15,9 @@
   table {
     margin: 0 auto;
     td {
-      width: 20px;
-      height: 20px;
+      $size: 20px;
+      width: $size;
+      height: $size;
       border: 1px solid darken(white, 20%);
     }
   }
@@ -38,5 +39,5 @@
 }
 
 .snakeHead { background: black; }
-.snakeBody { background: lighten(black, 50%); }
+.snakeBody { background: lighten(black, 33%); }
 .treat { background: red; }

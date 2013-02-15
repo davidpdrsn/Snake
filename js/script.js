@@ -1,4 +1,3 @@
-function log(a) { console.log(a); }
 function randomNumber(from,to) { return Math.floor(Math.random()*(to-from+1)+from); }
 
 var game = {
@@ -16,7 +15,8 @@ var game = {
 
   snake: {
     x: null,
-    y: null
+    y: null,
+    bodyParts: []
   },
 
   treat: {
@@ -25,7 +25,9 @@ var game = {
   },
 
   position: function(className, x, y) {
-    $('.' + className).removeClass(className);
+    if (className != 'snakeBody') {
+      $('.' + className).removeClass(className);
+    }
 
     $('.grid table tr:nth-of-type(' + y + ') td:nth-of-type(' + x + ')').addClass(className);
 
@@ -35,7 +37,11 @@ var game = {
     } else if (className == 'treat') {
       game.treat.x = x;
       game.treat.y = y;
+    } else if (className == 'snakeBody') {
+      var newBodyPart = { x: x, y: y };
+      game.snake.bodyParts.push(newBodyPart);
     }
+
   },
 
   positionSnake: function(){
@@ -50,6 +56,15 @@ var game = {
     while ( x == game.snake.x && y == game.snake.y) {
       x = randomNumber(1, game.gridSize);
       y = randomNumber(1, game.gridSize);
+    }
+
+    if ( game.snake.bodyParts.length > 0 ) {
+      game.snake.bodyParts.forEach(function(bodyPart){
+        while ( x == bodyPart.x && y == bodyPart.y) {
+          x = randomNumber(1, game.gridSize);
+          y = randomNumber(1, game.gridSize);
+        }
+      });
     }
 
     game.position('treat', x, y);
@@ -81,11 +96,29 @@ var game = {
         if (game.treatEaten()) {
           game.positionTreat();
           game.increasePoints();
+
+          game.newBodyPart();
         }
         if (game.dead()) {
           game.reset();
         }
       }, game.speed);
+    }
+  },
+
+  newBodyPart: function() {
+    if (game.direction == 'up') {
+      game.position('snakeBody', game.snake.x, game.snake.y + 1);
+
+    } else if (game.direction == 'down') {
+      game.position('snakeBody', game.snake.x, game.snake.y - 1);
+
+    } else if (game.direction == 'right') {
+      game.position('snakeBody', game.snake.x - 1, game.snake.y);
+
+    } else if (game.direction == 'left') {
+      game.position('snakeBody', game.snake.x + 1, game.snake.y);
+
     }
   },
 
@@ -109,9 +142,19 @@ var game = {
   },
 
   dead: function(){
+    var die = false;
+
     if (game.snake.x > game.gridSize || game.snake.x < 0 || game.snake.y > game.gridSize || game.snake.y < 0) {
-      return true;
+      die = true;
     }
+
+    game.snake.bodyParts.forEach(function(bodyPart){
+      if ( game.snake.x == bodyPart.x && game.snake.y == bodyPart.y ) {
+        die = true;
+      }
+    });
+
+    return die;
   },
 
   setup: function(){
@@ -144,6 +187,7 @@ var game = {
   reset: function(){
     $('.grid table').html('');
     game.direction = null;
+    game.snake.bodyParts = [];
     game.setup();
   }
 }
@@ -159,9 +203,3 @@ $(function(){
   });
 
 });
-
-/* TODO list
- * make snake longer when treat eaten
- * move the body of the snake when moving
- * die when the head hits the body
- */
