@@ -162,15 +162,28 @@ var game = {
 
   // increase the points pased on the current speed
   increasePoints: function() {
-    var currentPoints = parseInt($('.points').html());
+    var currentPoints = parseInt($('.points').html()),
+        newPoints;
     if ( game.speed == 500 ) {
-      $('.points').html( currentPoints + 1 );
+      newPoints = currentPoints + 1;
+      $('.points').html(newPoints);
+
     } else if ( game.speed == 300 ) {
-      $('.points').html( currentPoints + 2 );
+      newPoints = currentPoints + 2;
+      $('.points').html(newPoints);
+
     } else if ( game.speed == 100 ) {
-      $('.points').html( currentPoints + 3 );
+      newPoints = currentPoints + 3;
+      $('.points').html(newPoints);
+
     } else if ( game.speed == 50 ) {
-      $('.points').html( currentPoints + 4 );
+      newPoints = currentPoints + 4;
+      $('.points').html(newPoints);
+    }
+
+    if ( localStorage.getItem('highscore') < newPoints ) {
+      localStorage.setItem('highscore', newPoints);
+      $('.highscore').html(newPoints);
     }
   },
 
@@ -200,6 +213,11 @@ var game = {
     game.positionSnake();
     game.positionTreat();
     $('.points').html('0');
+    if ( localStorage.getItem('highscore') ) {
+      $('.highscore').html(localStorage.getItem('highscore'));
+    } else {
+      $('.highscore').html(0);
+    }
 
     // game.direction = 'right';
     // game.move();
