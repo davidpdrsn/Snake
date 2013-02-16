@@ -151,21 +151,21 @@ var game = {
   },
 
   dead: function(){
-    var die = false;
+    var dead = false;
 
     if (game.snake.bodyParts[0].x > game.gridSize || game.snake.bodyParts[0].x < 0 || game.snake.bodyParts[0].y > game.gridSize || game.snake.bodyParts[0].y < 0) {
-      die = true;
+      dead = true;
     }
 
     game.snake.bodyParts.forEach(function(bodyPart, index){
       if (index != 0) {
         if ( game.snake.bodyParts[0].x == bodyPart.x && game.snake.bodyParts[0].y == bodyPart.y ) {
-          die = true;
+          dead = true;
         }
       }
     });
 
-    return die;
+    return dead;
   },
 
   setup: function(){
