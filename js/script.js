@@ -1,3 +1,5 @@
+// load files need for binding based on the presence of touch events
+
 var game = {
   gridSize: 20,
 
@@ -8,6 +10,10 @@ var game = {
 
   // draw grid based on grid size
   drawGrid: function(){
+    if ( Modernizr.touch ) {
+      game.gridSize = 15;
+    }
+
     for (var i = 0; i < game.gridSize; i += 1) {
       $('.grid table').append('<tr></tr>');
     }
@@ -195,12 +201,11 @@ var game = {
     game.positionTreat();
     $('.points').html('0');
 
-    game.direction = 'right';
-    game.move();
+    // game.direction = 'right';
+    // game.move();
 
     Mousetrap.bind(['up', 'down', 'right', 'left'], function(e){
       var direction = e.keyIdentifier.toLowerCase();
-
       if (direction == 'down' && game.direction == 'up') {
         return;
       } else if (direction == 'up' && game.direction == 'down') {
@@ -210,7 +215,21 @@ var game = {
       } else if (direction == 'right' && game.direction == 'left') {
         return;
       }
+      game.direction = direction;
+      game.move();
+    });
 
+    $('.grid table').hammer({ prevent_default: true }).bind('swipe', function(e){
+      var direction = e.direction;
+      if (direction == 'down' && game.direction == 'up') {
+        return;
+      } else if (direction == 'up' && game.direction == 'down') {
+        return;
+      } else if (direction == 'left' && game.direction == 'right') {
+        return;
+      } else if (direction == 'right' && game.direction == 'left') {
+        return;
+      }
       game.direction = direction;
       game.move();
     });
