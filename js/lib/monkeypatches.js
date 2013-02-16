@@ -10,3 +10,4 @@ Array.prototype.remove = function(from, to) {
   this.length = from < 0 ? this.length + from : from;
   return this.push.apply(this, rest);
 }
+function randomNumber(from,to) { return Math.floor(Math.random()*(to-from+1)+from); }
