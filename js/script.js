@@ -3,8 +3,10 @@ var game = {
 
   speed: 300,
 
+  // the direction the head of the snake is moving
   direction: null,
 
+  // draw grid based on grid size
   drawGrid: function(){
     for (var i = 0; i < game.gridSize; i += 1) {
       $('.grid table').append('<tr></tr>');
@@ -15,16 +17,23 @@ var game = {
     }
   },
 
+  // snake object containing body parts with x and y coordinates
+  // as well as a list of moves the snake has made since the game started
+  // the newest move is first
   snake: {
     bodyParts: [],
     moves: []
   },
 
+  // x and y coordinates of the current treat
   treat: {
     x: null,
     y: null
   },
 
+  // method for adding a new snake body or treat
+  // also updates the snake and treat objects
+  // className can be 'snakeBody' or 'treat'
   add: function(className, x, y) {
     $('.grid table tr:nth-of-type(' + y + ') td:nth-of-type(' + x + ')').addClass(className);
 
@@ -38,12 +47,16 @@ var game = {
 
   },
 
+  // position the snake in the middle of the grid
+  // used when the game starts or is reset
   positionSnake: function(){
     var pos = Math.round(game.gridSize / 2);
     game.add('snakeBody', pos, pos);
     $('.snakeBody').addClass('snakeHead');
   },
 
+  // position the treat at a random place in the grid
+  // the position cannot be the position of any of the body parts
   positionTreat: function(){
     var x = randomNumber(1, game.gridSize),
         y = randomNumber(1, game.gridSize);
@@ -59,21 +72,23 @@ var game = {
     game.add('treat', x, y);
   },
 
+  // set an interval that triggers methods for moving the whole snake in the direction stored in game.direction
+  // clear all intervals every time direction is changed to prevent conflicts
+  // every time when moving add the direction to the front of the game.snake.moves array
+  // give the first body part a special class as that is the head
+  // check if treat has been eaten and if so make a new one, increase the points, and make a new body part
+  // check if you're dead and if so restart the game
   move: function() {
     if (game.direction) {
       for (var i = 0; i < 9999; i += 1) {
         window.clearInterval(i);
       }
       var movement = window.setInterval(function(){
-
         game.snake.moves.unshift( game.direction );
-
         game.moveBody();
-
         var head = game.snake.bodyParts[0];
         $('.snakeHead').removeClass('snakeHead');
         $('.grid table tr:nth-of-type(' + head.y + ') td:nth-of-type(' + head.x + ')').addClass('snakeHead');
-
         if (game.treatEaten()) {
           game.positionTreat();
           game.increasePoints();
@@ -86,13 +101,12 @@ var game = {
     }
   },
 
+  // make a new body at the end of the snake
+  // the direction of the last body parts has to be taken into consideration
   newBodyPart: function() {
-    var id = game.snake.bodyParts.length - 1;
-
-    var lastBodyPart = game.snake.bodyParts[id];
-
-    var dir = game.snake.moves[id];
-
+    var id = game.snake.bodyParts.length - 1,
+        lastBodyPart = game.snake.bodyParts[id],
+        dir = game.snake.moves[id];
     if (dir == 'up') {
       game.add('snakeBody', lastBodyPart.x, lastBodyPart.y + 1);
 
@@ -107,6 +121,8 @@ var game = {
     }
   },
 
+  // loop over each body part and move it in the direction the head took when it was in that position
+  // so if move[10] is left, move bodyPart[10] to the left
   moveBody: function() {
     $('.snakeBody').removeClass('snakeBody');
 
@@ -131,12 +147,14 @@ var game = {
     });
   },
 
+  // return true if the head is in the same position as the treat
   treatEaten: function(){
     if (game.snake.bodyParts[0].x == game.treat.x && game.snake.bodyParts[0].y == game.treat.y) {
       return true;
     }
   },
 
+  // increase the points pased on the current speed
   increasePoints: function() {
     var currentPoints = parseInt($('.points').html());
     if ( game.speed == 500 ) {
@@ -150,6 +168,8 @@ var game = {
     }
   },
 
+  // return true if head is outside the grid
+  // or if the head is in the same position as any one of the body parts
   dead: function(){
     var dead = false;
 
@@ -168,6 +188,7 @@ var game = {
     return dead;
   },
 
+  // do some setup stuff including setting up binds to change the direction
   setup: function(){
     game.drawGrid();
     game.positionSnake();
@@ -195,6 +216,7 @@ var game = {
     });
   },
 
+  // reset the game
   reset: function(){
     $('.grid table').html('');
     game.direction = null;
