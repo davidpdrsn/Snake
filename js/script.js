@@ -174,8 +174,8 @@ var game = {
     game.positionTreat();
     $('.points').html('0');
 
-    // game.direction = 'right';
-    // game.move();
+    game.direction = 'right';
+    game.move();
 
     Mousetrap.bind(['up', 'down', 'right', 'left'], function(e){
       var direction = e.keyIdentifier.toLowerCase();
