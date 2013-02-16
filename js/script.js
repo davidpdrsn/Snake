@@ -3,6 +3,10 @@ function randomNumber(from,to) { return Math.floor(Math.random()*(to-from+1)+fro
 var game = {
   gridSize: 15,
 
+  speed: 300,
+
+  direction: null,
+
   drawGrid: function(){
     for (var i = 0; i < game.gridSize; i += 1) {
       $('.grid table').append('<tr></tr>');
@@ -14,9 +18,8 @@ var game = {
   },
 
   snake: {
-    x: null,
-    y: null,
-    bodyParts: []
+    bodyParts: [],
+    moves: []
   },
 
   treat: {
@@ -24,17 +27,10 @@ var game = {
     y: null
   },
 
-  position: function(className, x, y) {
-    if (className != 'snakeBody') {
-      $('.' + className).removeClass(className);
-    }
-
+  add: function(className, x, y) {
     $('.grid table tr:nth-of-type(' + y + ') td:nth-of-type(' + x + ')').addClass(className);
 
-    if (className == 'snakeHead') {
-      game.snake.x = x;
-      game.snake.y = y;
-    } else if (className == 'treat') {
+    if (className == 'treat') {
       game.treat.x = x;
       game.treat.y = y;
     } else if (className == 'snakeBody') {
@@ -46,33 +42,24 @@ var game = {
 
   positionSnake: function(){
     var pos = Math.round(game.gridSize / 2);
-    game.position('snakeHead', pos, pos);
+    game.add('snakeBody', pos, pos);
+    $('.snakeBody').addClass('snakeHead');
   },
 
   positionTreat: function(){
     var x = randomNumber(1, game.gridSize),
-    y = randomNumber(1, game.gridSize);
+        y = randomNumber(1, game.gridSize);
 
-    while ( x == game.snake.x && y == game.snake.y) {
-      x = randomNumber(1, game.gridSize);
-      y = randomNumber(1, game.gridSize);
-    }
+    game.snake.bodyParts.forEach(function(bodyPart){
+      while ( x == bodyPart.x && y == bodyPart.y) {
+        x = randomNumber(1, game.gridSize);
+        y = randomNumber(1, game.gridSize);
+      }
+    });
 
-    if ( game.snake.bodyParts.length > 0 ) {
-      game.snake.bodyParts.forEach(function(bodyPart){
-        while ( x == bodyPart.x && y == bodyPart.y) {
-          x = randomNumber(1, game.gridSize);
-          y = randomNumber(1, game.gridSize);
-        }
-      });
-    }
-
-    game.position('treat', x, y);
+    $('.treat').removeClass('treat');
+    game.add('treat', x, y);
   },
-
-  speed: 300,
-
-  direction: null,
 
   move: function() {
     if (game.direction) {
@@ -80,23 +67,18 @@ var game = {
         window.clearInterval(i);
       }
       var movement = window.setInterval(function(){
-        if (game.direction == 'up') {
-          game.position('snakeHead', game.snake.x, game.snake.y - 1);
 
-        } else if (game.direction == 'down') {
-          game.position('snakeHead', game.snake.x, game.snake.y + 1);
+        game.snake.moves.unshift( game.direction );
 
-        } else if (game.direction == 'left') {
-          game.position('snakeHead', game.snake.x - 1, game.snake.y);
+        game.moveBody();
 
-        } else if (game.direction == 'right') {
-          game.position('snakeHead', game.snake.x + 1, game.snake.y);
-        }
+        var head = game.snake.bodyParts[0];
+        $('.snakeHead').removeClass('snakeHead');
+        $('.grid table tr:nth-of-type(' + head.y + ') td:nth-of-type(' + head.x + ')').addClass('snakeHead');
 
         if (game.treatEaten()) {
           game.positionTreat();
           game.increasePoints();
-
           game.newBodyPart();
         }
         if (game.dead()) {
@@ -107,23 +89,52 @@ var game = {
   },
 
   newBodyPart: function() {
-    if (game.direction == 'up') {
-      game.position('snakeBody', game.snake.x, game.snake.y + 1);
+    var id = game.snake.bodyParts.length - 1;
 
-    } else if (game.direction == 'down') {
-      game.position('snakeBody', game.snake.x, game.snake.y - 1);
+    var lastBodyPart = game.snake.bodyParts[id];
 
-    } else if (game.direction == 'right') {
-      game.position('snakeBody', game.snake.x - 1, game.snake.y);
+    var dir = game.snake.moves[id];
 
-    } else if (game.direction == 'left') {
-      game.position('snakeBody', game.snake.x + 1, game.snake.y);
+    if (dir == 'up') {
+      game.add('snakeBody', lastBodyPart.x, lastBodyPart.y + 1);
 
+    } else if (dir == 'down') {
+      game.add('snakeBody', lastBodyPart.x, lastBodyPart.y - 1);
+
+    } else if (dir == 'right') {
+      game.add('snakeBody', lastBodyPart.x - 1, lastBodyPart.y);
+
+    } else if (dir == 'left') {
+      game.add('snakeBody', lastBodyPart.x + 1, lastBodyPart.y);
     }
   },
 
+  moveBody: function() {
+    $('.snakeBody').removeClass('snakeBody');
+
+    game.snake.bodyParts.forEach(function(bodyPart, id){
+      var dir = game.snake.moves[id];
+
+      function moveTo(x, y) {
+        $('.grid table tr:nth-of-type(' + y + ') td:nth-of-type(' + x + ')').addClass('snakeBody');
+        game.snake.bodyParts[id].x = x;
+        game.snake.bodyParts[id].y = y;
+      }
+
+      if (dir == 'up') {
+        moveTo(bodyPart.x, bodyPart.y - 1);
+      } else if (dir == 'down') {
+        moveTo(bodyPart.x, bodyPart.y + 1);
+      } else if (dir == 'right') {
+        moveTo(bodyPart.x + 1, bodyPart.y);
+      } else if (dir == 'left') {
+        moveTo(bodyPart.x - 1, bodyPart.y);
+      }
+    });
+  },
+
   treatEaten: function(){
-    if (game.snake.x == game.treat.x && game.snake.y == game.treat.y) {
+    if (game.snake.bodyParts[0].x == game.treat.x && game.snake.bodyParts[0].y == game.treat.y) {
       return true;
     }
   },
@@ -144,13 +155,15 @@ var game = {
   dead: function(){
     var die = false;
 
-    if (game.snake.x > game.gridSize || game.snake.x < 0 || game.snake.y > game.gridSize || game.snake.y < 0) {
+    if (game.snake.bodyParts[0].x > game.gridSize || game.snake.bodyParts[0].x < 0 || game.snake.bodyParts[0].y > game.gridSize || game.snake.bodyParts[0].y < 0) {
       die = true;
     }
 
-    game.snake.bodyParts.forEach(function(bodyPart){
-      if ( game.snake.x == bodyPart.x && game.snake.y == bodyPart.y ) {
-        die = true;
+    game.snake.bodyParts.forEach(function(bodyPart, index){
+      if (index != 0) {
+        if ( game.snake.bodyParts[0].x == bodyPart.x && game.snake.bodyParts[0].y == bodyPart.y ) {
+          die = true;
+        }
       }
     });
 
@@ -200,21 +213,6 @@ $(function(){
     game.speed = $(this).val();
     $(this).blur();
     game.reset();
-  });
-
-  var paused = false;
-  $('.pause').click(function(){
-    if (!paused) {
-      $(this).html('Unpause');
-      for (var i = 0; i < 9999; i += 1) {
-        window.clearInterval(i);
-      }
-      paused = true;
-    } else {
-      $(this).html('Pause');
-      game.move();
-      paused = false;
-    }
   });
 
 });

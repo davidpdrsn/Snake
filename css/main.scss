@@ -14,11 +14,12 @@
 .grid {
   table {
     margin: 0 auto;
+    border: 1px solid darken(white, 20%);
     td {
       $size: 20px;
       width: $size;
       height: $size;
-      border: 1px solid darken(white, 20%);
+      // border: 1px solid darken(white, 20%);
     }
   }
 } // .grid
@@ -38,6 +39,6 @@
   }
 }
 
-.snakeHead { background: black; }
+.snakeHead { background: black !important; }
 .snakeBody { background: lighten(black, 33%); }
 .treat { background: red; }

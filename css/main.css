@@ -8,11 +8,11 @@
   margin: 1em 0; }
 
 .grid table {
-  margin: 0 auto; }
+  margin: 0 auto;
+  border: 1px solid #cccccc; }
   .grid table td {
     width: 20px;
-    height: 20px;
-    border: 1px solid #cccccc; }
+    height: 20px; }
 
 .stuff {
   width: 230px;
@@ -27,7 +27,7 @@
     width: 100%; }
 
 .snakeHead {
-  background: black; }
+  background: black !important; }
 
 .snakeBody {
   background: #545454; }
