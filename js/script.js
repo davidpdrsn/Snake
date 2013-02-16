@@ -1,5 +1,5 @@
 var game = {
-  gridSize: 15,
+  gridSize: 20,
 
   speed: 300,
 
