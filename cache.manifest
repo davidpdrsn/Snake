@@ -1,0 +1,10 @@
+CACHE MANIFEST
+/snake/css/normalize.css
+/snake/css/main.css
+/snake/js/lib/vendor/modernizr.js
+/snake/js/lib/vendor/jquery.js
+/snake/js/lib/vendor/hammer.js
+/snake/js/lib/vendor/jquery.hammer.js
+/snake/js/lib/monkeypatches.js
+/snake/js/lib/vendor/mousetrap.js
+/snake/js/script.js
