@@ -78,6 +78,26 @@ var game = {
     game.add('treat', x, y);
   },
 
+  positionSpecialTreat: function(){
+    var x = randomNumber(1, game.gridSize),
+        y = randomNumber(1, game.gridSize);
+
+    game.snake.bodyParts.forEach(function(bodyPart){
+      while ( x == bodyPart.x && y == bodyPart.y) {
+        x = randomNumber(1, game.gridSize);
+        y = randomNumber(1, game.gridSize);
+      }
+    });
+
+    while ( x == game.treat.x && y == game.treat.y) {
+      x = randomNumber(1, game.gridSize);
+      y = randomNumber(1, game.gridSize);
+    }
+
+    $('.specialTreat').removeClass('specialTreat');
+    game.add('specialTreat', x, y);
+  },
+
   // set an interval that triggers methods for moving the whole snake in the direction stored in game.direction
   // clear all intervals every time direction is changed to prevent conflicts
   // every time when moving add the direction to the front of the game.snake.moves array
@@ -212,6 +232,9 @@ var game = {
     game.drawGrid();
     game.positionSnake();
     game.positionTreat();
+
+    // game.positionSpecialTreat();
+
     $('.points').html('0');
     if ( localStorage.getItem('highscore') ) {
       $('.highscore').html(localStorage.getItem('highscore'));

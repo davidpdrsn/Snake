@@ -48,3 +48,22 @@
 .snakeHead { background: black !important; }
 .snakeBody { background: lighten(black, 33%); }
 .treat { background: red; }
+.specialTreat {
+  background: blue;
+  -webkit-animation: glow .5s infinite alternate linear;
+  -moz-animation: glow .5s infinite alternate linear;
+  animation: glow .5s infinite alternate linear;
+}
+
+@-webkit-keyframes glow {
+  from { box-shadow: 0 0 0 blue; }
+  to { box-shadow: 0 0 15px blue; }
+}
+@-moz-keyframes glow {
+  from { box-shadow: 0 0 0 blue; }
+  to { box-shadow: 0 0 15px blue; }
+}
+@keyframes glow {
+  from { box-shadow: 0 0 0 blue; }
+  to { box-shadow: 0 0 15px blue; }
+}
