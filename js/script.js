@@ -37,15 +37,23 @@ var game = {
     y: null
   },
 
+  specialTreat: {
+    x: null,
+    y: null
+  },
+
   // method for adding a new snake body or treat
   // also updates the snake and treat objects
-  // className can be 'snakeBody' or 'treat'
+  // className can be 'snakeBody' or 'treat' or 'specialTreat'
   add: function(className, x, y) {
     $('.grid table tr:nth-of-type(' + y + ') td:nth-of-type(' + x + ')').addClass(className);
 
     if (className == 'treat') {
       game.treat.x = x;
       game.treat.y = y;
+    } else if (className == 'specialTreat') {
+      game.specialTreat.x = x;
+      game.specialTreat.y = y;
     } else if (className == 'snakeBody') {
       var newBodyPart = { x: x, y: y };
       game.snake.bodyParts.push(newBodyPart);
@@ -117,9 +125,17 @@ var game = {
         $('.grid table tr:nth-of-type(' + head.y + ') td:nth-of-type(' + head.x + ')').addClass('snakeHead');
         if (game.treatEaten()) {
           game.positionTreat();
-          game.increasePoints();
+          game.increasePoints('normal');
           game.newBodyPart();
         }
+
+        // game.positionSpecialTreat();
+        if (game.specialTreatEaten()) {
+          game.removeSpecialTreat();
+          game.increasePoints('special');
+          game.newBodyPart();
+        }
+
         if (game.dead()) {
           game.reset();
         }
@@ -180,25 +196,52 @@ var game = {
     }
   },
 
+  specialTreatEaten: function(){
+    if (game.snake.bodyParts[0].x == game.specialTreat.x && game.snake.bodyParts[0].y == game.specialTreat.y) {
+      return true;
+    }
+  },
+
+  removeSpecialTreat: function(){
+    $('.specialTreat').removeClass('specialTreat');
+  },
+
   // increase the points pased on the current speed
-  increasePoints: function() {
+  increasePoints: function(kindOfTreat) {
     var currentPoints = parseInt($('.points').html()),
         newPoints;
-    if ( game.speed == 500 ) {
-      newPoints = currentPoints + 1;
-      $('.points').html(newPoints);
 
-    } else if ( game.speed == 300 ) {
-      newPoints = currentPoints + 2;
-      $('.points').html(newPoints);
+    if ( kindOfTreat == 'normal' ) {
+      if ( game.speed == 500 ) {
+        newPoints = currentPoints + 1;
+        $('.points').html(newPoints);
+      } else if ( game.speed == 300 ) {
+        newPoints = currentPoints + 2;
+        $('.points').html(newPoints);
+      } else if ( game.speed == 100 ) {
+        newPoints = currentPoints + 3;
+        $('.points').html(newPoints);
+      } else if ( game.speed == 50 ) {
+        newPoints = currentPoints + 4;
+        $('.points').html(newPoints);
+      }
+    } else if ( kindOfTreat == 'special' ) {
+      if ( game.speed == 500 ) {
+        newPoints = currentPoints + 3;
+        $('.points').html(newPoints);
 
-    } else if ( game.speed == 100 ) {
-      newPoints = currentPoints + 3;
-      $('.points').html(newPoints);
+      } else if ( game.speed == 300 ) {
+        newPoints = currentPoints + 6;
+        $('.points').html(newPoints);
 
-    } else if ( game.speed == 50 ) {
-      newPoints = currentPoints + 4;
-      $('.points').html(newPoints);
+      } else if ( game.speed == 100 ) {
+        newPoints = currentPoints + 9;
+        $('.points').html(newPoints);
+
+      } else if ( game.speed == 50 ) {
+        newPoints = currentPoints + 12;
+        $('.points').html(newPoints);
+      }
     }
 
     if ( localStorage.getItem('highscore') < newPoints ) {
@@ -232,8 +275,6 @@ var game = {
     game.drawGrid();
     game.positionSnake();
     game.positionTreat();
-
-    // game.positionSpecialTreat();
 
     $('.points').html('0');
     if ( localStorage.getItem('highscore') ) {
