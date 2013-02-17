@@ -352,4 +352,19 @@ $(function(){
     game.reset();
   });
 
+  var paused = false;
+  $('.pause').click(function(){
+    if ( paused ) {
+      $('.pause').html('Pause');
+      game.move();
+      paused = false;
+    } else {
+      $('.pause').html('Unpause');
+      for (var i = 0; i < 9999; i += 1) {
+        window.clearInterval(i);
+      }
+      paused = true;
+    }
+  });
+
 });

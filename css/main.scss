@@ -6,16 +6,6 @@
   box-sizing: border-box;
 }
 
-.points_container {
-  text-align: center;
-  margin: 1em auto;
-  overflow: hidden;
-  max-width: 401px;
-  div {
-    width: 50%;
-    float: left;
-  }
-}
 
 .grid {
   table {
@@ -30,18 +20,26 @@
   }
 } // .grid
 
-.stuff {
-  width: 230px;
-  margin: 0 auto;
-  margin-top: 1em;
+.halfnhalf {
+  margin: 1em auto;
   text-align: center;
+  @include clearfix;
+  max-width: 401px;
+  p {
+    margin: 0;
+  }
+  div {
+    width: 50%;
+    float: left;
+  }
   label {
     margin-bottom: .5em;
-    display: inline-block;
+    width: 50%;
+    float: left;
   }
   select {
-    display: block;
-    width: 100%;
+    width: 50%;
+    float: left;
   }
 }
 

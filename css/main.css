@@ -3,15 +3,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-.points_container {
-  text-align: center;
-  margin: 1em auto;
-  overflow: hidden;
-  max-width: 401px; }
-  .points_container div {
-    width: 50%;
-    float: left; }
-
 .grid table {
   margin: 0 auto;
   border: 1px solid #cccccc; }
@@ -19,17 +10,28 @@
     width: 20px;
     height: 20px; }
 
-.stuff {
-  width: 230px;
-  margin: 0 auto;
-  margin-top: 1em;
-  text-align: center; }
-  .stuff label {
+.halfnhalf {
+  margin: 1em auto;
+  text-align: center;
+  zoom: 1;
+  max-width: 401px; }
+  .halfnhalf:before, .halfnhalf:after {
+    content: "";
+    display: table; }
+  .halfnhalf:after {
+    clear: both; }
+  .halfnhalf p {
+    margin: 0; }
+  .halfnhalf div {
+    width: 50%;
+    float: left; }
+  .halfnhalf label {
     margin-bottom: .5em;
-    display: inline-block; }
-  .stuff select {
-    display: block;
-    width: 100%; }
+    width: 50%;
+    float: left; }
+  .halfnhalf select {
+    width: 50%;
+    float: left; }
 
 .snakeHead {
   background: black !important; }

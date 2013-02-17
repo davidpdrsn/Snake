@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<div class="points_container">
+<div class="halfnhalf">
   <div>
     High score: <span class="highscore"></span>
   </div>
@@ -34,16 +34,21 @@
   </table>
 </div> <!--.grid-->
 
-<div class="stuff">
-  <p>
-    <label for="change_speed">Difficulty: </label>
-    <select id="change_speed">
-      <option value="1000">Easy</option>
-      <option value="300" selected>Medium</option>
-      <option value="100">Hard</option>
-      <option value="50">Super hard</option>
-    </select>
-  </p>
+<div class="halfnhalf">
+  <div>
+    <p>
+      <label for="change_speed">Difficulty: </label>
+      <select id="change_speed">
+        <option value="1000">Easy</option>
+        <option value="300" selected>Medium</option>
+        <option value="100">Hard</option>
+        <option value="50">Super hard</option>
+      </select>
+    </p>
+  </div>
+  <div>
+    <button class="pause">Pause</button>
+  </div>
 </div> <!--.speed_change-->
 
 </body>
