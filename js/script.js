@@ -123,16 +123,22 @@ var game = {
         var head = game.snake.bodyParts[0];
         $('.snakeHead').removeClass('snakeHead');
         $('.grid table tr:nth-of-type(' + head.y + ') td:nth-of-type(' + head.x + ')').addClass('snakeHead');
-        if (game.treatEaten()) {
-          game.positionTreat();
-          game.increasePoints('normal');
-          game.newBodyPart();
+
+        if ( $('.specialTreat').length > 0 ) {
+          game.movesSinceSpecialTreat++;
+        }
+        if ( game.movesSinceSpecialTreat == 31 ) {
+          game.removeSpecialTreat();
         }
 
-        // game.positionSpecialTreat();
         if (game.specialTreatEaten()) {
           game.removeSpecialTreat();
           game.increasePoints('special');
+          game.newBodyPart();
+        }
+        if (game.treatEaten()) {
+          game.positionTreat();
+          game.increasePoints('normal');
           game.newBodyPart();
         }
 
@@ -189,11 +195,20 @@ var game = {
     });
   },
 
+  treatsEaten: 0,
+
+  movesSinceSpecialTreat: 0,
+
   // return true if the head is in the same position as the treat
   treatEaten: function(){
     if (game.snake.bodyParts[0].x == game.treat.x && game.snake.bodyParts[0].y == game.treat.y) {
+      game.treatsEaten++;
+      if (game.treatsEaten % 20 == 0 ){
+        game.positionSpecialTreat();
+      }
       return true;
     }
+
   },
 
   specialTreatEaten: function(){
@@ -204,6 +219,7 @@ var game = {
 
   removeSpecialTreat: function(){
     $('.specialTreat').removeClass('specialTreat');
+    game.movesSinceSpecialTreat = 0;
   },
 
   // increase the points pased on the current speed
